@@ -1,3 +1,4 @@
-controllers:
-    resource: ../src/Controller/
-    type: attribute
+contacts_create:
+    path: /contacts/
+    controller: App\Infrastructure\Controller\Contacts\ContactsPostController
+    methods: [ POST ]
