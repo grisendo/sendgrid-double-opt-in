@@ -4,46 +4,58 @@ declare(strict_types=1);
 
 namespace App\Domain\Contact;
 
-use App\Domain\List\ListId;
+use App\Domain\ContactList\ContactListId;
+use Exception;
 use Grisendo\DDD\Aggregate\AggregateRoot;
 
 class Contact extends AggregateRoot
 {
     private ContactId $id;
 
-    private ListId $listId;
+    private ContactListId $listId;
 
     private ContactEmail $email;
 
-    private ContactName $name;
+    private ContactToken $token;
 
-    private ContactSurname $surname;
+    private ?ContactName $name;
+
+    private ?ContactSurname $surname;
+
+    private bool $confirmed;
 
     public function __construct(
         ContactId $id,
-        ListId $listId,
+        ContactListId $listId,
         ContactEmail $email,
-        ContactName $name,
-        ContactSurname $surname,
+        ContactToken $token,
+        ?ContactName $name = null,
+        ?ContactSurname $surname = null,
     ) {
         $this->id = $id;
         $this->listId = $listId;
         $this->email = $email;
+        $this->token = $token;
         $this->name = $name;
         $this->surname = $surname;
+        $this->confirmed = false;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function create(
         ContactId $id,
-        ListId $listId,
+        ContactListId $listId,
         ContactEmail $email,
-        ContactName $name,
-        ContactSurname $surname,
+        ?ContactName $name = null,
+        ?ContactSurname $surname = null,
     ): self {
         $contact = new self(
             $id,
             $listId,
             $email,
+            self::generateToken(),
             $name,
             $surname
         );
@@ -53,12 +65,46 @@ class Contact extends AggregateRoot
                 $contact->getId()->getValue()->getValue(),
                 $listId->getValue()->getValue(),
                 $email->getValue(),
-                $name->getValue(),
-                $surname->getValue(),
+                $name?->getValue(),
+                $surname?->getValue(),
             )
         );
 
         return $contact;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function regenerateToken(): void
+    {
+        $this->token = self::generateToken();
+
+        $this->record(
+            new ContactRegeneratedTokenDomainEvent(
+                $this->getId()->getValue()->getValue(),
+                $this->getListId()->getValue()->getValue(),
+                $this->getEmail()->getValue(),
+                $this->getToken()->getValue(),
+            )
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function confirm(): void
+    {
+        $this->confirmed = true;
+        $this->token = self::generateToken();
+
+        $this->record(
+            new ContactConfirmedDomainEvent(
+                $this->getId()->getValue()->getValue(),
+                $this->getListId()->getValue()->getValue(),
+                $this->getEmail()->getValue(),
+            )
+        );
     }
 
     public function getId(): ContactId
@@ -66,7 +112,7 @@ class Contact extends AggregateRoot
         return $this->id;
     }
 
-    public function getListId(): ListId
+    public function getListId(): ContactListId
     {
         return $this->listId;
     }
@@ -76,13 +122,31 @@ class Contact extends AggregateRoot
         return $this->email;
     }
 
-    public function getName(): ContactName
+    public function getToken(): ContactToken
+    {
+        return $this->token;
+    }
+
+    public function getName(): ?ContactName
     {
         return $this->name;
     }
 
-    public function getSurname(): ContactSurname
+    public function getSurname(): ?ContactSurname
     {
         return $this->surname;
+    }
+
+    public function isConfirmed(): bool
+    {
+        return $this->confirmed;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private static function generateToken(): ContactToken
+    {
+        return new ContactToken(hash('sha256', random_bytes(32), false));
     }
 }

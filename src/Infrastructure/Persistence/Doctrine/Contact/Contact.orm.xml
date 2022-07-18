@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Domain\Contact\Contact" table="contacts">
+        <id name="id" type="contact_id" column="id"/>
+        <embedded name="token" class="App\Domain\Contact\ContactToken" use-column-prefix="false"/>
+        <field name="listId" column="list_id" type="contact_list_id"/>
+        <embedded name="email" class="App\Domain\Contact\ContactEmail" use-column-prefix="false"/>
+        <field name="name" column="name" type="contact_name" nullable="true"/>
+        <field name="surname" column="surname" type="contact_surname" nullable="true"/>
+        <field name="confirmed" column="confirmed" type="boolean"/>
+
+        <indexes>
+            <index name="idx_contacts_list" columns="list_id"/>
+            <index name="idx_contacts_email" columns="email"/>
+        </indexes>
+
+        <unique-constraints>
+            <unique-constraint columns="list_id,email" name="uk_contacts_list_email"/>
+        </unique-constraints>
+    </entity>
+
+</doctrine-mapping>

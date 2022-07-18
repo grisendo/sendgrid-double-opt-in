@@ -8,7 +8,7 @@ use App\Domain\Contact\ContactEmail;
 use App\Domain\Contact\ContactId;
 use App\Domain\Contact\ContactName;
 use App\Domain\Contact\ContactSurname;
-use App\Domain\List\ListId;
+use App\Domain\ContactList\ContactListId;
 use Grisendo\DDD\Bus\Command\CommandHandler;
 use Grisendo\DDD\Uuid;
 
@@ -24,10 +24,14 @@ class CreateContactCommandHandler implements CommandHandler
     public function __invoke(CreateContactCommand $command): void
     {
         $id = new ContactId(new Uuid($command->getId()));
-        $listId = new ListId(new Uuid($command->getListId()));
+        $listId = new ContactListId(new Uuid($command->getListId()));
         $email = new ContactEmail($command->getContactEmail());
-        $name = new ContactName($command->getContactName());
-        $surname = new ContactSurname($command->getContactSurname());
+        $name = $command->getContactName() ? new ContactName(
+            $command->getContactName()
+        ) : null;
+        $surname = $command->getContactSurname() ? new ContactSurname(
+            $command->getContactSurname()
+        ) : null;
 
         $this->contactCreator->__invoke($id, $listId, $email, $name, $surname);
     }

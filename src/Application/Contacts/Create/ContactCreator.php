@@ -10,7 +10,8 @@ use App\Domain\Contact\ContactId;
 use App\Domain\Contact\ContactName;
 use App\Domain\Contact\ContactRepository;
 use App\Domain\Contact\ContactSurname;
-use App\Domain\List\ListId;
+use App\Domain\ContactList\ContactListId;
+use Exception;
 use Grisendo\DDD\Bus\Event\EventBus;
 
 final class ContactCreator
@@ -25,17 +26,24 @@ final class ContactCreator
         $this->bus = $bus;
     }
 
+    /**
+     * @throws Exception
+     */
     public function __invoke(
         ContactId $id,
-        ListId $listId,
+        ContactListId $listId,
         ContactEmail $email,
-        ContactName $name,
-        ContactSurname $surname,
+        ?ContactName $name = null,
+        ?ContactSurname $surname = null,
     ): void {
         if (null !== $this->repository->findById($id)) {
             return;
         }
-        $contact = Contact::create($id, $listId, $email, $name, $surname);
+        if ($contact = $this->repository->findByListAndEmail($listId, $email)) {
+            $contact->regenerateToken();
+        } else {
+            $contact = Contact::create($id, $listId, $email, $name, $surname);
+        }
 
         $this->repository->save($contact);
         $this->bus->publish(...$contact->pullDomainEvents());

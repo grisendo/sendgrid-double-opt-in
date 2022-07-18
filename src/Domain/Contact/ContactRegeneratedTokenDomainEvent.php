@@ -7,35 +7,31 @@ namespace App\Domain\Contact;
 use Grisendo\DDD\Bus\Event\DomainEvent;
 use JetBrains\PhpStorm\ArrayShape;
 
-final class ContactCreatedDomainEvent extends DomainEvent
+final class ContactRegeneratedTokenDomainEvent extends DomainEvent
 {
     private string $listId;
 
     private string $email;
 
-    private ?string $name;
-
-    private ?string $surname;
+    private ?string $token;
 
     public function __construct(
         string $id,
+        string $token,
         string $listId,
         string $email,
-        ?string $name = null,
-        ?string $surname = null,
         string $eventId = null,
         string $occurredOn = null
     ) {
         parent::__construct($id, $eventId, $occurredOn);
         $this->listId = $listId;
         $this->email = $email;
-        $this->name = $name;
-        $this->surname = $surname;
+        $this->token = $token;
     }
 
     public static function getEventName(): string
     {
-        return 'contact.created';
+        return 'contact.regenerated_token';
     }
 
     public static function fromPrimitives(
@@ -43,8 +39,7 @@ final class ContactCreatedDomainEvent extends DomainEvent
         #[ArrayShape([
             'list_id' => 'string',
             'email' => 'string',
-            'name' => '?string',
-            'surname' => '?string',
+            'token' => 'string',
         ])]
         array $body,
         string $eventId,
@@ -54,8 +49,7 @@ final class ContactCreatedDomainEvent extends DomainEvent
             $aggregateId,
             $body['list_id'],
             $body['email'],
-            $body['name'] ?? null,
-            $body['surname'] ?? null,
+            $body['token'],
             $eventId,
             $occurredOn
         );
@@ -64,16 +58,14 @@ final class ContactCreatedDomainEvent extends DomainEvent
     #[ArrayShape([
         'list_id' => 'string',
         'email' => 'string',
-        'name' => '?string',
-        'surname' => '?string',
+        'token' => 'string',
     ])]
     public function toPrimitives(): array
     {
         return [
             'list_id' => $this->listId,
             'email' => $this->email,
-            'name' => $this->name ?? null,
-            'surname' => $this->surname ?? null,
+            'token' => $this->token,
         ];
     }
 
@@ -87,13 +79,8 @@ final class ContactCreatedDomainEvent extends DomainEvent
         return $this->email;
     }
 
-    public function getName(): ?string
+    public function getToken(): string
     {
-        return $this->name;
-    }
-
-    public function getSurname(): ?string
-    {
-        return $this->surname;
+        return $this->token;
     }
 }

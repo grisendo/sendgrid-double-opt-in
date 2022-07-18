@@ -44,8 +44,8 @@ final class ContactsPostController extends AbstractController
                 (string) $request->request->get('id'),
                 (string) $request->request->get('list_id'),
                 (string) $request->request->get('email'),
-                (string) $request->request->get('first_name'),
-                (string) $request->request->get('last_name'),
+                ((string) $request->request->get('first_name')) ?: null,
+                ((string) $request->request->get('last_name')) ?: null,
             )
         );
 
@@ -60,25 +60,25 @@ final class ContactsPostController extends AbstractController
         $constraint = new Assert\Collection([
             'allowExtraFields' => false,
             'fields' => [
-                'id' => [
+                'id' => new Assert\Required([
                     new Assert\NotBlank(),
                     new Assert\Uuid(),
-                ],
-                'list_id' => [
+                ]),
+                'list_id' => new Assert\Required([
                     new Assert\NotBlank(),
                     new Assert\Uuid(),
-                ],
-                'email' => [
+                ]),
+                'email' => new Assert\Required([
                     new Assert\NotBlank(),
                     new Assert\Email(),
                     new Assert\Length(['max' => 254]),
-                ],
-                'first_name' => [
+                ]),
+                'first_name' => new Assert\Optional([
                     new Assert\Length(['max' => 50]),
-                ],
-                'last_name' => [
+                ]),
+                'last_name' => new Assert\Optional([
                     new Assert\Length(['max' => 50]),
-                ],
+                ]),
             ],
         ]);
 

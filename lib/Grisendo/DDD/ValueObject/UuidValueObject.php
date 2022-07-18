@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Grisendo\DDD\ValueObject;
 
 use Grisendo\DDD\Uuid;
+use Stringable;
 
-abstract class UuidValueObject
+abstract class UuidValueObject implements Stringable
 {
     private Uuid $value;
 
@@ -18,5 +19,10 @@ abstract class UuidValueObject
     public function getValue(): Uuid
     {
         return $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return $this->value->__toString();
     }
 }

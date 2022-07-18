@@ -14,16 +14,16 @@ class CreateContactCommand implements Command
 
     private string $contactEmail;
 
-    private string $contactName;
+    private ?string $contactName;
 
-    private string $contactSurname;
+    private ?string $contactSurname;
 
     public function __construct(
         string $id,
         string $listId,
         string $contactEmail,
-        string $contactName,
-        string $contactSurname
+        ?string $contactName = null,
+        ?string $contactSurname = null
     ) {
         $this->id = $id;
         $this->listId = $listId;
@@ -47,12 +47,12 @@ class CreateContactCommand implements Command
         return $this->contactEmail;
     }
 
-    public function getContactName(): string
+    public function getContactName(): ?string
     {
         return $this->contactName;
     }
 
-    public function getContactSurname(): string
+    public function getContactSurname(): ?string
     {
         return $this->contactSurname;
     }

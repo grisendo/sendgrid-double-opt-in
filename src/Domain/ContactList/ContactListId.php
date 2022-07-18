@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\List;
+namespace App\Domain\ContactList;
 
 use Grisendo\DDD\ValueObject\UuidValueObject;
 
-class ListId extends UuidValueObject
+class ContactListId extends UuidValueObject
 {
 }
