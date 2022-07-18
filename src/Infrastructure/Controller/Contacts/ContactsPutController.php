@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Controller\Contacts;
 
-use App\Application\Contacts\Create\CreateContactCommand;
+use App\Application\Contacts\Confirm\ConfirmContactCommand;
 use App\Domain\Contact\CannotGenerateContactTokenException;
+use App\Domain\Contact\ContactNotFoundException;
 use Grisendo\DDD\Bus\Command\CommandBus;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
-final class ContactsPostController extends AbstractController
+final class ContactsPutController extends AbstractController
 {
     private NormalizerInterface $normalizer;
 
@@ -52,13 +53,16 @@ final class ContactsPostController extends AbstractController
 
         try {
             $this->commandBus->dispatch(
-                new CreateContactCommand(
-                    (string) $request->request->get('id'),
+                new ConfirmContactCommand(
                     (string) $request->request->get('list_id'),
                     (string) $request->request->get('email'),
-                    ((string) $request->request->get('first_name')) ?: null,
-                    ((string) $request->request->get('last_name')) ?: null,
+                    (string) $request->request->get('token'),
                 )
+            );
+        } catch (ContactNotFoundException) {
+            return new JsonResponse(
+                Response::$statusTexts[Response::HTTP_NOT_FOUND],
+                Response::HTTP_NOT_FOUND
             );
         } catch (CannotGenerateContactTokenException) {
             return new JsonResponse(
@@ -80,10 +84,6 @@ final class ContactsPostController extends AbstractController
         $constraint = new Assert\Collection([
             'allowExtraFields' => false,
             'fields' => [
-                'id' => new Assert\Required([
-                    new Assert\NotBlank(),
-                    new Assert\Uuid(),
-                ]),
                 'list_id' => new Assert\Required([
                     new Assert\NotBlank(),
                     new Assert\Uuid(),
@@ -93,11 +93,9 @@ final class ContactsPostController extends AbstractController
                     new Assert\Email(),
                     new Assert\Length(['max' => 254]),
                 ]),
-                'first_name' => new Assert\Optional([
-                    new Assert\Length(['max' => 50]),
-                ]),
-                'last_name' => new Assert\Optional([
-                    new Assert\Length(['max' => 50]),
+                'token' => new Assert\Required([
+                    new Assert\NotBlank(),
+                    new Assert\Length(['max' => 64]),
                 ]),
             ],
         ]);

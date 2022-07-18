@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Contacts\Create;
 
+use App\Domain\Contact\CannotGenerateContactTokenException;
 use App\Domain\Contact\ContactEmail;
 use App\Domain\Contact\ContactId;
 use App\Domain\Contact\ContactName;
@@ -21,6 +22,9 @@ class CreateContactCommandHandler implements CommandHandler
         $this->contactCreator = $contactCreator;
     }
 
+    /**
+     * @throws CannotGenerateContactTokenException
+     */
     public function __invoke(CreateContactCommand $command): void
     {
         $id = new ContactId(new Uuid($command->getId()));

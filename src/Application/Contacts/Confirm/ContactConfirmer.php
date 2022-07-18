@@ -2,19 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Contacts\Create;
+namespace App\Application\Contacts\Confirm;
 
 use App\Domain\Contact\CannotGenerateContactTokenException;
-use App\Domain\Contact\Contact;
 use App\Domain\Contact\ContactEmail;
-use App\Domain\Contact\ContactId;
-use App\Domain\Contact\ContactName;
+use App\Domain\Contact\ContactNotFoundException;
 use App\Domain\Contact\ContactRepository;
-use App\Domain\Contact\ContactSurname;
+use App\Domain\Contact\ContactToken;
 use App\Domain\ContactList\ContactListId;
 use Grisendo\DDD\Bus\Event\EventBus;
 
-final class ContactCreator
+final class ContactConfirmer
 {
     private ContactRepository $repository;
 
@@ -27,24 +25,19 @@ final class ContactCreator
     }
 
     /**
-     * @throws CannotGenerateContactTokenException
+     * @throws ContactNotFoundException|CannotGenerateContactTokenException
      */
     public function __invoke(
-        ContactId $id,
         ContactListId $listId,
         ContactEmail $email,
-        ?ContactName $name = null,
-        ?ContactSurname $surname = null,
+        ContactToken $token,
     ): void {
-        if (null !== $this->repository->findById($id)) {
-            return;
-        }
-        if ($contact = $this->repository->findByListAndEmail($listId, $email)) {
-            $contact->regenerateToken();
-        } else {
-            $contact = Contact::create($id, $listId, $email, $name, $surname);
+        $contact = $this->repository->findByListAndEmail($listId, $email);
+        if (!$contact || !$token->isEqualsTo($contact->getToken())) {
+            throw new ContactNotFoundException($listId, $email);
         }
 
+        $contact->confirm();
         $this->repository->save($contact);
         $this->bus->publish(...$contact->pullDomainEvents());
     }

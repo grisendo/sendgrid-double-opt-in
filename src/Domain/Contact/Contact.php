@@ -42,7 +42,7 @@ class Contact extends AggregateRoot
     }
 
     /**
-     * @throws Exception
+     * @throws CannotGenerateContactTokenException
      */
     public static function create(
         ContactId $id,
@@ -74,7 +74,7 @@ class Contact extends AggregateRoot
     }
 
     /**
-     * @throws Exception
+     * @throws CannotGenerateContactTokenException
      */
     public function regenerateToken(): void
     {
@@ -91,7 +91,7 @@ class Contact extends AggregateRoot
     }
 
     /**
-     * @throws Exception
+     * @throws CannotGenerateContactTokenException
      */
     public function confirm(): void
     {
@@ -143,10 +143,14 @@ class Contact extends AggregateRoot
     }
 
     /**
-     * @throws Exception
+     * @throws CannotGenerateContactTokenException
      */
     private static function generateToken(): ContactToken
     {
-        return new ContactToken(hash('sha256', random_bytes(32), false));
+        try {
+            return new ContactToken(hash('sha256', random_bytes(32), false));
+        } catch (Exception) {
+            throw new CannotGenerateContactTokenException();
+        }
     }
 }

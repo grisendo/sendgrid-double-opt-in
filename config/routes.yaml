@@ -2,3 +2,8 @@ contacts_create:
     path: /contacts/
     controller: App\Infrastructure\Controller\Contacts\ContactsPostController
     methods: [ POST ]
+
+contacts_confirm:
+    path: /contacts/
+    controller: App\Infrastructure\Controller\Contacts\ContactsPutController
+    methods: [ PUT ]

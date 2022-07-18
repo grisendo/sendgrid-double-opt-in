@@ -23,4 +23,9 @@ class ContactToken extends StringValueObject
             throw new InvalidArgumentException($msg);
         }
     }
+
+    public function isEqualsTo(ContactToken $token): bool
+    {
+        return $this->getValue() === $token->getValue();
+    }
 }
