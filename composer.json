@@ -23,8 +23,14 @@
         "symfony/yaml": "6.1.*"
     },
     "require-dev": {
+        "fakerphp/faker": "^1.19",
         "friendsofphp/php-cs-fixer": "^3.9",
-        "roave/security-advisories": "dev-latest"
+        "mockery/mockery": "^1.5",
+        "phpunit/phpunit": "^9.5",
+        "roave/security-advisories": "dev-latest",
+        "symfony/browser-kit": "6.1.*",
+        "symfony/css-selector": "6.1.*",
+        "symfony/phpunit-bridge": "^6.1"
     },
     "config": {
         "allow-plugins": {

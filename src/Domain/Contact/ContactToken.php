@@ -18,6 +18,10 @@ class ContactToken extends StringValueObject
 
     private function ensureTokenIsValid(string $value): void
     {
+        if (Validator::hasLessThanNCharacters($value, 64)) {
+            $msg = 'Contact token length too short.';
+            throw new InvalidArgumentException($msg);
+        }
         if (Validator::hasMoreThanNCharacters($value, 64)) {
             $msg = 'Contact token length too big.';
             throw new InvalidArgumentException($msg);

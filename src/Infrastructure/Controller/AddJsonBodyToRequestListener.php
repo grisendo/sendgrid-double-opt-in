@@ -30,7 +30,7 @@ final class AddJsonBodyToRequestListener
                     JSON_THROW_ON_ERROR
                 );
                 $request->request->replace($jsonData);
-            } catch (JsonException $e) {
+            } catch (JsonException) {
                 throw new HttpException(Response::HTTP_BAD_REQUEST, 'Invalid json data');
             }
             if (!$jsonData) {

@@ -17,4 +17,9 @@ class ContactEmail extends EmailValueObject
         }
         parent::__construct($email);
     }
+
+    public function isEqualsTo(ContactEmail $email): bool
+    {
+        return $email->getValue() === $this->getValue();
+    }
 }
