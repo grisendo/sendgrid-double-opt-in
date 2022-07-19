@@ -25,7 +25,7 @@ class ContactList extends AggregateRoot
         return $this->id;
     }
 
-    public function getName(): ?ContactListName
+    public function getName(): ContactListName
     {
         return $this->name;
     }
