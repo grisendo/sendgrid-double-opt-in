@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Contacts\Create;
+namespace App\Application\Contact\Create;
 
 use Grisendo\DDD\Bus\Command\Command;
 
-class CreateContactCommand extends \App\Application\Contacts\Confirm\ConfirmContactCommand implements Command
+class CreateContactCommand implements Command
 {
     private string $id;
 

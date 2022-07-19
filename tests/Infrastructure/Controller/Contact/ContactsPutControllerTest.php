@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Infrastructure\Controller\Contacts;
+namespace App\Tests\Infrastructure\Controller\Contact;
 
 use App\Tests\BaseWebTestCase;
 use App\Tests\Domain\Contact\ContactEmailMother;

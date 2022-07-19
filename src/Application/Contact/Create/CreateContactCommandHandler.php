@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Contacts\Create;
+namespace App\Application\Contact\Create;
 
 use App\Domain\Contact\CannotGenerateContactTokenException;
 use App\Domain\Contact\ContactEmail;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Application\Contacts\Create;
+namespace App\Tests\Application\Contact\Create;
 
-use App\Application\Contacts\Create\CreateContactCommand;
+use App\Application\Contact\Create\CreateContactCommand;
 use App\Domain\Contact\Contact;
 use App\Tests\Domain\Contact\ContactEmailMother;
 use App\Tests\Domain\Contact\ContactIdMother;

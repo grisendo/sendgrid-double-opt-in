@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Application\Contacts\Confirm;
+namespace App\Tests\Application\Contact\Confirm;
 
-use App\Application\Contacts\Confirm\ConfirmContactCommand;
+use App\Application\Contact\Confirm\ConfirmContactCommand;
 use App\Domain\Contact\Contact;
 use App\Tests\Domain\Contact\ContactEmailMother;
 use App\Tests\Domain\Contact\ContactTokenMother;

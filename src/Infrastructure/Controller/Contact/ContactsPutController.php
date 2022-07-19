@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Controller\Contacts;
+namespace App\Infrastructure\Controller\Contact;
 
-use App\Application\Contacts\Confirm\ConfirmContactCommand;
+use App\Application\Contact\Confirm\ConfirmContactCommand;
 use App\Domain\Contact\CannotGenerateContactTokenException;
 use App\Domain\Contact\ContactNotFoundException;
 use Grisendo\DDD\Bus\Command\CommandBus;
@@ -16,20 +16,24 @@ use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
-use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ContactsPutController extends AbstractController
 {
+    private ValidatorInterface $validator;
+
     private NormalizerInterface $normalizer;
 
     private CommandBus $commandBus;
 
     public function __construct(
         NormalizerInterface $normalizer,
-        CommandBus $commandBus
+        CommandBus $commandBus,
+        ValidatorInterface $validator
     ) {
         $this->normalizer = $normalizer;
         $this->commandBus = $commandBus;
+        $this->validator = $validator;
     }
 
     public function __invoke(Request $request): JsonResponse
@@ -102,6 +106,6 @@ final class ContactsPutController extends AbstractController
             ],
         ]);
 
-        return Validation::createValidator()->validate($input, $constraint);
+        return $this->validator->validate($input, $constraint);
     }
 }

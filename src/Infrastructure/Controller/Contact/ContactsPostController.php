@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Controller\Contacts;
+namespace App\Infrastructure\Controller\Contact;
 
-use App\Application\Contacts\Create\CreateContactCommand;
+use App\Application\Contact\Create\CreateContactCommand;
 use App\Domain\Contact\CannotGenerateContactTokenException;
 use Grisendo\DDD\Bus\Command\CommandBus;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,18 +15,22 @@ use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
-use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ContactsPostController extends AbstractController
 {
+    private ValidatorInterface $validator;
+
     private NormalizerInterface $normalizer;
 
     private CommandBus $commandBus;
 
     public function __construct(
+        ValidatorInterface $validator,
         NormalizerInterface $normalizer,
         CommandBus $commandBus
     ) {
+        $this->validator = $validator;
         $this->normalizer = $normalizer;
         $this->commandBus = $commandBus;
     }
@@ -102,6 +106,6 @@ final class ContactsPostController extends AbstractController
             ],
         ]);
 
-        return Validation::createValidator()->validate($input, $constraint);
+        return $this->validator->validate($input, $constraint);
     }
 }

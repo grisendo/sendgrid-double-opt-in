@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Application\Contacts\Create;
+namespace App\Tests\Application\Contact\Create;
 
-use App\Application\Contacts\Create\ContactCreator;
-use App\Application\Contacts\Create\CreateContactCommandHandler;
+use App\Application\Contact\Create\ContactCreator;
+use App\Application\Contact\Create\CreateContactCommandHandler;
 use App\Domain\Contact\Contact;
 use App\Domain\Contact\ContactCreatedDomainEvent;
 use App\Domain\Contact\ContactEmail;

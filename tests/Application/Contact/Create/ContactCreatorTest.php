@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Application\Contacts\Create;
+namespace App\Tests\Application\Contact\Create;
 
-use App\Application\Contacts\Create\ContactCreator;
+use App\Application\Contact\Create\ContactCreator;
 use App\Domain\Contact\ContactCreatedDomainEvent;
 use App\Domain\Contact\ContactRegeneratedTokenDomainEvent;
 use App\Domain\Contact\ContactRepository;

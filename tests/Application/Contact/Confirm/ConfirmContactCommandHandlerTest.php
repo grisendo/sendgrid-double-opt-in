@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Application\Contacts\Confirm;
+namespace App\Tests\Application\Contact\Confirm;
 
-use App\Application\Contacts\Confirm\ConfirmContactCommandHandler;
-use App\Application\Contacts\Confirm\ContactConfirmer;
+use App\Application\Contact\Confirm\ConfirmContactCommandHandler;
+use App\Application\Contact\Confirm\ContactConfirmer;
 use App\Domain\Contact\ContactConfirmedDomainEvent;
 use App\Domain\Contact\ContactEmail;
 use App\Domain\Contact\ContactRepository;
