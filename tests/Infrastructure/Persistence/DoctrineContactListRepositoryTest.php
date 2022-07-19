@@ -32,7 +32,6 @@ class DoctrineContactListRepositoryTest extends BaseKernelTestCase
         $this->assertEquals($id, $foundList->getId());
     }
 
-
     public function testFindAllEmpty(): void
     {
         $repository = new DoctrineContactListRepository($this->entityManager);
@@ -41,7 +40,6 @@ class DoctrineContactListRepositoryTest extends BaseKernelTestCase
 
         $this->assertCount(0, $lists);
     }
-
 
     public function testFindAll(): void
     {
