@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Domain;
+namespace App\Tests\Domain\Contact;
 
 use App\Domain\Contact\ContactEmail;
 use Faker\Factory;

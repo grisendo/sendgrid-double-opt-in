@@ -2,20 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Domain;
+namespace App\Tests\Domain\Contact;
 
 use App\Domain\Contact\Contact;
-use App\Domain\Contact\ContactId;
-use App\Domain\ContactList\ContactListId;
-use Grisendo\DDD\Uuid;
+use App\Tests\Domain\ContactList\ContactListIdMother;
 
 class ContactMother
 {
     public static function random(): Contact
     {
         return new Contact(
-            new ContactId(Uuid::random()),
-            new ContactListId(Uuid::random()),
+            ContactIdMother::random(),
+            ContactListIdMother::random(),
             ContactEmailMother::random(),
             ContactTokenMother::random(),
             ContactNameMother::random(),
