@@ -17,9 +17,9 @@ final class ContactRegeneratedTokenDomainEvent extends DomainEvent
 
     public function __construct(
         string $id,
-        string $token,
         string $listId,
         string $email,
+        string $token,
         string $eventId = null,
         string $occurredOn = null
     ) {

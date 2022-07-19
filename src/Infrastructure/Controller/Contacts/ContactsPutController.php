@@ -61,8 +61,10 @@ final class ContactsPutController extends AbstractController
             );
         } catch (ContactNotFoundException) {
             return new JsonResponse(
-                Response::$statusTexts[Response::HTTP_NOT_FOUND],
-                Response::HTTP_NOT_FOUND
+                '',
+                Response::HTTP_NOT_FOUND,
+                [],
+                true
             );
         } catch (CannotGenerateContactTokenException) {
             return new JsonResponse(

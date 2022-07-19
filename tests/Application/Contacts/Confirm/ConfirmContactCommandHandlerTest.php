@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConfirmContactCommandHandlerTest extends TestCase
 {
-    public function testConfirmContactCommandHandlerTest(): void
+    public function testConfirmContactCommandHandler(): void
     {
         $dummyContact = ContactMother::random();
 
@@ -34,7 +34,6 @@ class ConfirmContactCommandHandlerTest extends TestCase
                 }
             )
             ->andReturn($dummyContact);
-        $contactRepository->shouldNotReceive('save');
         $contactRepository
             ->shouldReceive('save')
             ->once()
@@ -50,11 +49,11 @@ class ConfirmContactCommandHandlerTest extends TestCase
                     return $event->getAggregateId() ===
                         $dummyContact->getId()->getValue()->getValue()
                         &&
-                        $event->getEmail() ===
-                        $dummyContact->getEmail()->getValue()
-                        &&
                         $event->getListId() ===
-                        $dummyContact->getListId()->getValue()->getValue();
+                        $dummyContact->getListId()->getValue()->getValue()
+                        &&
+                        $event->getEmail() ===
+                        $dummyContact->getEmail()->getValue();
                 }
             );
 

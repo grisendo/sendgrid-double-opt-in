@@ -6,9 +6,11 @@ namespace App\Tests;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use Exception;
 use LogicException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class BaseWebTestCase extends WebTestCase
 {
@@ -38,5 +40,84 @@ class BaseWebTestCase extends WebTestCase
         $schemaTool = new SchemaTool($this->entityManager);
         $schemaTool->dropDatabase();
         $schemaTool->updateSchema($metaData);
+    }
+
+    protected function isJSONResponse(Response $response): bool
+    {
+        return 'application/json' === $response->headers->get('Content-Type');
+    }
+
+    protected function assertIsJSONResponse(
+        Response $response,
+        string $message = ''
+    ): void {
+        $this->assertTrue($this->isJSONResponse($response), $message);
+    }
+
+    protected function isSymfonyErrorList(Response $response): bool
+    {
+        if (!$this->isJSONResponse($response)) {
+            return false;
+        }
+
+        try {
+            $content = json_decode(
+                $response->getContent(),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            );
+            if (!$content) {
+                return false;
+            }
+            if (!isset($content['type']) || 'https://symfony.com/errors/validation' !== $content['type']) {
+                return false;
+            }
+
+            return !empty($content['violations']);
+        } catch (Exception) {
+            return false;
+        }
+    }
+
+    protected function assertIsSymfonyErrorList(
+        Response $response,
+        string $message = ''
+    ): void {
+        $this->assertTrue($this->isSymfonyErrorList($response), $message);
+    }
+
+    protected function hasSymfonyErrorPath(
+        Response $response,
+        string $path
+    ): bool {
+        if (!$this->isSymfonyErrorList($response)) {
+            return false;
+        }
+
+        $content = json_decode(
+            $response->getContent(),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+        foreach ($content['violations'] as $violation) {
+            if ($violation['propertyPath'] === $path) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function assertHasSymfonyErrorPath(
+        Response $response,
+        string $path,
+        string $message = ''
+    ): void {
+        $this->assertTrue(
+            $this->hasSymfonyErrorPath($response, $path),
+            $message
+        );
     }
 }
