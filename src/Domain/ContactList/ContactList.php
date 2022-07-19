@@ -20,6 +20,37 @@ class ContactList extends AggregateRoot
         $this->name = $name;
     }
 
+    public static function create(
+        ContactListId $id,
+        ContactListName $name
+    ): self {
+        $contactList = new self($id, $name);
+
+        $contactList->record(
+            new ContactListCreatedDomainEvent(
+                $contactList->id->getValue()->getValue(),
+                $contactList->name->getValue()
+            )
+        );
+
+        return $contactList;
+    }
+
+    public function rename(ContactListName $name): void
+    {
+        if ($this->name->isEqualsTo($name)) {
+            return;
+        }
+        $this->name = $name;
+
+        $this->record(
+            new ContactListRenamedDomainEvent(
+                $this->id->getValue()->getValue(),
+                $this->name->getValue()
+            )
+        );
+    }
+
     public function getId(): ContactListId
     {
         return $this->id;

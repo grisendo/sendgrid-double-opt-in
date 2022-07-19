@@ -9,4 +9,6 @@ interface ContactListRepository
     public function findById(ContactListId $id): ?ContactList;
 
     public function findAll(): array;
+
+    public function save(ContactList $contactList): void;
 }

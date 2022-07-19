@@ -31,6 +31,12 @@ final class DoctrineContactListRepository implements ContactListRepository
         return $this->getRepository()->findBy([], ['name.value' => 'ASC']);
     }
 
+    public function save(ContactList $contactList): void
+    {
+        $this->entityManager->persist($contactList);
+        $this->entityManager->flush();
+    }
+
     private function getRepository(): EntityRepository
     {
         if (!isset($this->repository)) {

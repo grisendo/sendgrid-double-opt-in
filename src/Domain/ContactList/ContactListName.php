@@ -16,6 +16,11 @@ class ContactListName extends StringValueObject
         parent::__construct($value);
     }
 
+    public function isEqualsTo(ContactListName $name): bool
+    {
+        return $this->value === $name->getValue();
+    }
+
     private function ensureNameIsValid(string $value): void
     {
         if (Validator::hasMoreThanNCharacters($value, 100)) {
