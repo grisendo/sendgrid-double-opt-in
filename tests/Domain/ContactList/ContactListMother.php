@@ -15,4 +15,13 @@ class ContactListMother
             ContactListNameMother::random(),
         );
     }
+
+    public static function randomRenaming(
+        ContactList $contactList
+    ): ContactList {
+        return new ContactList(
+            $contactList->getId(),
+            ContactListNameMother::random(),
+        );
+    }
 }

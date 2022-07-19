@@ -33,3 +33,9 @@ services:
 
     App\Domain\ContactList\ContactListRepository:
         class: App\Infrastructure\Persistence\DoctrineContactListRepository
+
+    App\Application\ContactList\Import\ContactListImporter:
+        arguments:
+            - '@App\Infrastructure\Persistence\DoctrineContactListRepository'
+            - '@App\Infrastructure\Persistence\SendGridApiContactListRepository'
+            - '@Grisendo\DDD\Bus\Event\EventBus'
