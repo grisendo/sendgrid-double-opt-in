@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Bus;
 
-use App\Application\Contacts\Confirm\ConfirmContactCommand;
-use App\Application\Contacts\Confirm\ConfirmContactCommandHandler;
-use App\Application\Contacts\Create\CreateContactCommand;
-use App\Application\Contacts\Create\CreateContactCommandHandler;
+use App\Application\Contact\Confirm\ConfirmContactCommand;
+use App\Application\Contact\Confirm\ConfirmContactCommandHandler;
+use App\Application\Contact\Create\CreateContactCommand;
+use App\Application\Contact\Create\CreateContactCommandHandler;
 use Grisendo\DDD\Bus\Command\Command;
 use Grisendo\DDD\Bus\Command\CommandBus;
 

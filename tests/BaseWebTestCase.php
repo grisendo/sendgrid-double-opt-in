@@ -67,7 +67,7 @@ class BaseWebTestCase extends WebTestCase
                 512,
                 JSON_THROW_ON_ERROR
             );
-            if (!$content) {
+            if (null === $content) {
                 return false;
             }
             if (!isset($content['type']) || 'https://symfony.com/errors/validation' !== $content['type']) {
@@ -119,5 +119,35 @@ class BaseWebTestCase extends WebTestCase
             $this->hasSymfonyErrorPath($response, $path),
             $message
         );
+    }
+
+    protected function getResponseContentAsArray(Response $response): ?array
+    {
+        if (!$this->isJSONResponse($response)) {
+            return null;
+        }
+
+        $content = json_decode(
+            $response->getContent(),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+
+        if (is_array($content)) {
+            return $content;
+        }
+
+        return null;
+    }
+
+    protected function assertJSONResponseIs(
+        Response $response,
+        array $data,
+        string $message = ''
+    ): void {
+        $content = $this->getResponseContentAsArray($response);
+        $this->assertNotNull($content, $message);
+        $this->assertEquals($data, $content, $message);
     }
 }

@@ -1,9 +1,19 @@
 contacts_create:
     path: /contacts/
-    controller: App\Infrastructure\Controller\Contacts\ContactsPostController
+    controller: App\Infrastructure\Controller\Contact\ContactsPostController
     methods: [ POST ]
 
 contacts_confirm:
     path: /contacts/
-    controller: App\Infrastructure\Controller\Contacts\ContactsPutController
+    controller: App\Infrastructure\Controller\Contact\ContactsPutController
     methods: [ PUT ]
+
+lists_all:
+    path: /lists/
+    controller: App\Infrastructure\Controller\ContactList\ListsGetAllController
+    methods: [ GET ]
+
+lists_get:
+    path: /lists/{id}/
+    controller: App\Infrastructure\Controller\ContactList\ListsGetController
+    methods: [ GET ]
