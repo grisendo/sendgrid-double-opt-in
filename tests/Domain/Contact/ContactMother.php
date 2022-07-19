@@ -20,4 +20,16 @@ class ContactMother
             ContactSurnameMother::random()
         );
     }
+
+    public static function unnamedRandom(): Contact
+    {
+        return new Contact(
+            ContactIdMother::random(),
+            ContactListIdMother::random(),
+            ContactEmailMother::random(),
+            ContactTokenMother::random(),
+            null,
+            null
+        );
+    }
 }

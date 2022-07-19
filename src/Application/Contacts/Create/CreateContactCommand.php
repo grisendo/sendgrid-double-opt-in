@@ -6,7 +6,7 @@ namespace App\Application\Contacts\Create;
 
 use Grisendo\DDD\Bus\Command\Command;
 
-class CreateContactCommand implements Command
+class CreateContactCommand extends \App\Application\Contacts\Confirm\ConfirmContactCommand implements Command
 {
     private string $id;
 

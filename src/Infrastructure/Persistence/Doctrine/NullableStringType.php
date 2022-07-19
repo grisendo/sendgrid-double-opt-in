@@ -13,11 +13,6 @@ abstract class NullableStringType extends StringType
 
     abstract protected function customTypeName(): string;
 
-    public function protected(): ?int
-    {
-        return null;
-    }
-
     public function getName(): string
     {
         return self::customTypeName();
@@ -48,5 +43,10 @@ abstract class NullableStringType extends StringType
         AbstractPlatform $platform
     ): ?string {
         return $value ? $value->getValue() : null;
+    }
+
+    protected function getLength(): ?int
+    {
+        return null;
     }
 }
