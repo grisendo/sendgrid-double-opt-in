@@ -8,7 +8,7 @@ use App\Application\Contacts\Create\ContactCreator;
 use App\Domain\Contact\ContactCreatedDomainEvent;
 use App\Domain\Contact\ContactRegeneratedTokenDomainEvent;
 use App\Domain\Contact\ContactRepository;
-use App\Tests\Domain\ContactMother;
+use App\Tests\Domain\Contact\ContactMother;
 use Grisendo\DDD\Bus\Event\EventBus;
 use Mockery;
 use PHPUnit\Framework\TestCase;

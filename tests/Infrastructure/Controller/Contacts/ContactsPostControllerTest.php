@@ -3,8 +3,8 @@
 namespace App\Tests\Infrastructure\Controller\Contacts;
 
 use App\Tests\BaseWebTestCase;
-use App\Tests\Domain\ContactEmailMother;
-use Grisendo\DDD\Uuid;
+use App\Tests\Domain\Contact\ContactEmailMother;
+use App\Tests\Domain\ContactList\ContactListIdMother;
 use Symfony\Component\HttpFoundation\Response;
 
 class ContactsPostControllerTest extends BaseWebTestCase
@@ -14,7 +14,7 @@ class ContactsPostControllerTest extends BaseWebTestCase
         $client = $this->getClient();
 
         $client->jsonRequest('POST', '/contacts/', [
-            'list_id' => Uuid::random()->getValue(),
+            'list_id' => ContactListIdMother::random()->getValue()->getValue(),
             'email' => ContactEmailMother::random()->getValue(),
         ]);
         $content = json_decode(

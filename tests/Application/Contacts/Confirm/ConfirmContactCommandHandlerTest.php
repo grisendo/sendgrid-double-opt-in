@@ -10,7 +10,7 @@ use App\Domain\Contact\ContactConfirmedDomainEvent;
 use App\Domain\Contact\ContactEmail;
 use App\Domain\Contact\ContactRepository;
 use App\Domain\ContactList\ContactListId;
-use App\Tests\Domain\ContactMother;
+use App\Tests\Domain\Contact\ContactMother;
 use Grisendo\DDD\Bus\Event\EventBus;
 use Mockery;
 use PHPUnit\Framework\TestCase;
