@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Command;
+namespace App\Infrastructure\ConsoleCommand;
 
 use App\Application\ContactList\Import\ImportContactListsCommand;
 use App\Domain\ContactList\ContactListCreatedDomainEvent;
