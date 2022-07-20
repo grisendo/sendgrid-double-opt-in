@@ -132,4 +132,50 @@ class ContactListImporterTest extends TestCase
             $remoteContactList->getName()->getValue()
         );
     }
+
+    public function testExistingContactListButNotUpdated(): void
+    {
+        $localContactList = ContactListMother::random();
+        $oldName = $localContactList->getName();
+        $remoteContactList = ContactListMother::fromContactList(
+            $localContactList
+        );
+
+        $remoteRepository = Mockery::mock(ContactListRepository::class);
+        $remoteRepository->shouldReceive('findAll')
+            ->once()
+            ->with()
+            ->andReturn([$remoteContactList]);
+
+        $localRepository = Mockery::mock(ContactListRepository::class);
+        $localRepository
+            ->shouldReceive('findById')
+            ->once()
+            ->with($remoteContactList->getId())
+            ->andReturn($localContactList);
+
+        $localRepository
+            ->shouldReceive('save')
+            ->once()
+            ->withArgs(function (ContactList $list) use ($localContactList) {
+                return $list->getId()->isEqualsTo($localContactList->getId());
+            });
+
+        $bus = Mockery::mock(EventBus::class);
+        $bus
+            ->shouldNotReceive('publish')
+            ->never();
+
+        $importer = new ContactListImporter(
+            $localRepository,
+            $remoteRepository,
+            $bus
+        );
+        $importer->__invoke();
+
+        $this->assertEquals(
+            $oldName->getValue(),
+            $remoteContactList->getName()->getValue()
+        );
+    }
 }
