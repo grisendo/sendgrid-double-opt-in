@@ -8,8 +8,10 @@ use Grisendo\DDD\Bus\Query\Query;
 use Grisendo\DDD\Bus\Query\QueryBus;
 use Grisendo\DDD\Bus\Query\QueryResponse;
 use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
+use Throwable;
 
 final class SymfonyMessengerQueryBus implements QueryBus
 {
@@ -20,10 +22,22 @@ final class SymfonyMessengerQueryBus implements QueryBus
         $this->queryBus = $queryBus;
     }
 
+    /**
+     * @throws Throwable
+     */
     public function ask(Query $query): ?QueryResponse
     {
-        $envelope = $this->queryBus->dispatch(new Envelope($query));
+        try {
+            $envelope = $this->queryBus->dispatch(new Envelope($query));
 
-        return $envelope->last(HandledStamp::class)?->getResult();
+            return $envelope->last(HandledStamp::class)?->getResult();
+        } catch (HandlerFailedException $e) {
+            while ($e instanceof HandlerFailedException) {
+                /** @var Throwable $e */
+                $e = $e->getPrevious();
+            }
+
+            throw $e;
+        }
     }
 }

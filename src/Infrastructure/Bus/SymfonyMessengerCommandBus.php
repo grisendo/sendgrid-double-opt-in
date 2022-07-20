@@ -6,7 +6,9 @@ namespace App\Infrastructure\Bus;
 
 use Grisendo\DDD\Bus\Command\Command;
 use Grisendo\DDD\Bus\Command\CommandBus;
+use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Throwable;
 
 final class SymfonyMessengerCommandBus implements CommandBus
 {
@@ -17,8 +19,20 @@ final class SymfonyMessengerCommandBus implements CommandBus
         $this->commandBus = $commandBus;
     }
 
+    /**
+     * @throws Throwable
+     */
     public function dispatch(Command $command): void
     {
-        $this->commandBus->dispatch($command);
+        try {
+            $this->commandBus->dispatch($command);
+        } catch (HandlerFailedException $e) {
+            while ($e instanceof HandlerFailedException) {
+                /** @var Throwable $e */
+                $e = $e->getPrevious();
+            }
+
+            throw $e;
+        }
     }
 }
