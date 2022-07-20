@@ -11,10 +11,13 @@ use LogicException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Transport\Sync\SyncTransport;
 
 class BaseWebTestCase extends WebTestCase
 {
     protected EntityManagerInterface $entityManager;
+
+    protected bool $commandTransportIsSync;
 
     protected KernelBrowser $client;
 
@@ -34,6 +37,12 @@ class BaseWebTestCase extends WebTestCase
         $this->entityManager = $this->client->getKernel()->getContainer()
             ->get('doctrine')
             ->getManager();
+
+        $commandTransport = $this->getClient()->getContainer()->get(
+            'messenger.transport.command.transport'
+        );
+        $this->commandTransportIsSync = $commandTransport instanceof SyncTransport;
+
         $metaData = $this->entityManager
             ->getMetadataFactory()
             ->getAllMetadata();

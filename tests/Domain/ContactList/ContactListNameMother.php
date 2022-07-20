@@ -11,6 +11,6 @@ class ContactListNameMother
 {
     public static function random(): ContactListName
     {
-        return new ContactListName(Factory::create()->title());
+        return new ContactListName(Factory::create()->name());
     }
 }

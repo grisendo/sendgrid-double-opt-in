@@ -11,7 +11,15 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
-            $dbDSN: '%env(string:DATABASE_URL)%'
+            $sendGridApiKey: '%env(string:SENDGRID_API_KEY)%'
+
+    _instanceof:
+        Grisendo\DDD\Bus\Query\QueryHandler:
+            tags: [ { name: messenger.message_handler, from_transport: query.transport, bus: query.bus } ]
+        Grisendo\DDD\Bus\Command\CommandHandler:
+            tags: [ { name: messenger.message_handler, from_transport: command.transport, bus: command.bus } ]
+        Grisendo\DDD\Bus\Event\DomainEventSubscriber:
+            tags: [ { name: messenger.message_handler, from_transport: event.transport, bus: event.bus } ]
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -30,3 +38,12 @@ services:
     App\Infrastructure\Controller\AddJsonBodyToRequestListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    App\Domain\ContactList\ContactListRepository:
+        class: App\Infrastructure\Persistence\DoctrineContactListRepository
+
+    App\Application\ContactList\Import\ContactListImporter:
+        arguments:
+            - '@App\Infrastructure\Persistence\DoctrineContactListRepository'
+            - '@App\Infrastructure\Persistence\SendGridApiContactListRepository'
+            - '@Grisendo\DDD\Bus\Event\EventBus'

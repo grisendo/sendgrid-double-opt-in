@@ -40,10 +40,12 @@ class ContactsPutControllerTest extends BaseWebTestCase
         ]);
 
         $this->assertIsJSONResponse($client->getResponse());
+
         $this->assertEquals(
-            Response::HTTP_NOT_FOUND,
+            $this->commandTransportIsSync ? Response::HTTP_NOT_FOUND : Response::HTTP_ACCEPTED,
             $client->getResponse()->getStatusCode()
         );
+
         $this->assertEmpty($client->getResponse()->getContent());
     }
 
