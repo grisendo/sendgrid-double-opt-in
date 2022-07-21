@@ -44,7 +44,8 @@ class ConfirmContactCommandHandlerTest extends TestCase
             ->shouldReceive('publish')
             ->once()
             ->withArgs(
-                function (ContactConfirmedDomainEvent $event) use ($dummyContact
+                function (ContactConfirmedDomainEvent $event) use (
+                    $dummyContact
                 ) {
                     return $event->getAggregateId() ===
                         $dummyContact->getId()->getValue()->getValue()
